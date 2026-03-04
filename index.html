@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="/quran/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A new Flutter project.">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="quran">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>quran</title>
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+<script src="flutter_bootstrap.js" async></script>
+
+<script>
+  window.generatePdfFromData = function(jsonData, filename) {
+    try {
+      const data = JSON.parse(jsonData);
+
+      // Create HTML content
+      let html = `
+<!DOCTYPE html>
+<html dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>Quran Study - ${filename}</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    background: #f8f9fa;
+    padding: 20px;
+    font-size: 12px;
+  }
+
+  .chunk {
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    page-break-inside: avoid;
+    overflow: hidden;
+  }
+
+  .chunk-header {
+    background: linear-gradient(135deg, #1A5F7A, #2E8B9A);
+    color: white;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .chunk-title {
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .chunk-meta {
+    font-size: 11px;
+    opacity: 0.9;
+  }
+
+  .arabic-section {
+    background: #f8f9fa;
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .ayah {
+    direction: rtl;
+    text-align: right;
+    font-family: 'Amiri', serif;
+    font-size: 22px;
+    line-height: 1.8;
+    color: #1a1a1a;
+    display: inline;
+  }
+
+  .ayah-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, #1A5F7A, #2E8B9A);
+    color: white;
+    border-radius: 50%;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    margin: 0 8px;
+    vertical-align: middle;
+  }
+
+  .table-section {
+    padding: 16px;
+  }
+
+  .table-title {
+    color: #1A5F7A;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+  }
+
+  th {
+    background: #1A5F7A;
+    color: white;
+    padding: 8px 6px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 10px;
+  }
+
+  td {
+    padding: 8px 6px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+  }
+
+  tr:nth-child(even) {
+    background: #fafafa;
+  }
+
+  tr:hover {
+    background: #fff9e6;
+  }
+
+  .arabic-cell {
+    direction: rtl;
+    font-family: 'Amiri', serif;
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  .urdu-cell {
+    direction: rtl;
+    font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  @media print {
+    body {
+      background: white;
+      padding: 0;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    .chunk {
+      box-shadow: none;
+      margin-bottom: 16px;
+      border: 1px solid #ddd;
+    }
+    .chunk-header {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    th {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    tr { page-break-inside: avoid; }
+    .chunk { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+`;
+
+      // Add chunks
+      for (let i = 0; i < data.chunks.length; i++) {
+        const chunk = data.chunks[i];
+
+        html += `
+<div class="chunk">
+  <div class="chunk-header">
+    <div>
+      <div class="chunk-title">${chunk.title}</div>
+      ${chunk.ayahRange ? '<div class="chunk-meta">' + chunk.ayahRange + '</div>' : ''}
+    </div>
+    <div class="chunk-meta">${chunk.ayahs.length} Ayahs • ${chunk.words.length} Words</div>
+  </div>
+
+  <div class="arabic-section">
+    <div style="direction: rtl; text-align: right;">
+`;
+
+        // Add ayahs - inline, no line breaks
+        for (const ayah of chunk.ayahs) {
+          html += `<span class="ayah">${ayah.text}</span> <span class="ayah-number">${ayah.number}</span> `;
+        }
+
+        html += `</div>
+  </div>
+
+  <div class="table-section">
+    <div class="table-title">📊 Word Analysis</div>
+    <table>
+      <thead>
+        <tr>
+`;
+
+        // Add headers
+        for (const header of data.headers) {
+          html += `            <th>${header}</th>\n`;
+        }
+
+        html += `          </tr>
+      </thead>
+      <tbody>
+`;
+
+        // Add word rows
+        for (const word of chunk.words) {
+          html += '          <tr>\n';
+          for (let j = 0; j < word.length; j++) {
+            const cellText = word[j] || '';
+            const isArabic = /[\u0600-\u06FF]/.test(cellText);
+            const isLastTwo = j >= word.length - 2;
+
+            let cellClass = '';
+            if (isLastTwo && isArabic) {
+              cellClass = j === word.length - 1 ? 'arabic-cell' : 'urdu-cell';
+            }
+
+            html += `            <td class="${cellClass}">${cellText}</td>\n`;
+          }
+          html += '          </tr>\n';
+        }
+
+        html += `        </tbody>
+    </table>
+  </div>
+</div>
+`;
+      }
+
+      html += `
+</body>
+</html>`;
+
+      // Open in new window and print
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(html);
+      printWindow.document.close();
+
+      // Wait for fonts to load then print
+      printWindow.onload = function() {
+        setTimeout(function() {
+          printWindow.print();
+        }, 1000);
+      };
+
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error: ' + error.message);
+    }
+  };
+</script>
+</body>
+</html>
