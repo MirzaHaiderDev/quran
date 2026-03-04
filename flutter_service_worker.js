@@ -3,11 +3,11 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 
-const RESOURCES = {"flutter_bootstrap.js": "d1e45e84adcc26cf2d6eece02f03cf0f",
+const RESOURCES = {"flutter_bootstrap.js": "ee07ef5d5a58d6bbf045639e8eaa01ab",
 "version.json": "14f9fcda440f740301db42689fa7188c",
 "index.html": "7e9bbc62573d2f1b22be942408fb5137",
 "/": "7e9bbc62573d2f1b22be942408fb5137",
-"main.dart.js": "8526ffc315ae64eb5bfe07945d3a8892",
+"main.dart.js": "02829c704c23a9de08436d317f7ad569",
 "flutter.js": "888483df48293866f9f41d3d9274a779",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
@@ -22,7 +22,7 @@ const RESOURCES = {"flutter_bootstrap.js": "d1e45e84adcc26cf2d6eece02f03cf0f",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "33b7d9392238c04c131b6ce224e13711",
 "assets/shaders/ink_sparkle.frag": "ecc85a2e95f5e9f53123dcaf8cb9b6ce",
 "assets/AssetManifest.bin": "fc6c7025ba59b5d3848ee38194715dbe",
-"assets/fonts/MaterialIcons-Regular.otf": "5c49b9f5a25636862e75b7775ed8fe53",
+"assets/fonts/MaterialIcons-Regular.otf": "9619acc70c0b31ad2a1744d67ad1379f",
 "assets/assets/quran_rukus.json": "0983a4c77f1523058a44a06bbf64bb7f",
 "assets/assets/morphscsvwithtranslation.csv": "a95bda601ef09e22e8386d5cd6a7bcc4",
 "assets/assets/unique_nouns_surah_1_114_updated.csv": "63c27f883a35f3a0e8362a377ede1d04",
